@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SelectedPieces from './SelectedPieces';
 import bookOne from './constants/bookOne';
+import { Autocomplete, Dropdown, Button } from 'react-materialize';
 
 class App extends Component {
 	state = {
@@ -83,6 +84,16 @@ class App extends Component {
 						Reset
 					</button>
 				</div>
+				<Autocomplete
+					options={{
+						data: {
+							Twinkles: null,
+							'Lightly Row': null,
+							TucoSalamanca: 'https://placehold.it/250x250',
+						},
+					}}
+					placeholder="Latest Piece"
+				/>
 			</div>
 		);
 	}
