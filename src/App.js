@@ -1,17 +1,14 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import SelectedPieces from './SelectedPieces';
 import bookOne from './constants/bookOne';
-import { Autocomplete, Dropdown, Button } from 'react-materialize';
 
-class App extends Component {
-	state = {
-		selectedPieces: [],
-		currentBookOne: bookOne,
-		reset: true,
-	};
+function App() {
+	const [selectedPieces, setSelectedPieces] = useState([]);
+	const [currentBookOne, setCurrentBookOne] = useState(bookOne);
+	const [reset, setReset] = useState(true);
 
 	// Todo extract this out to helper file
-	compare = (a, b) => {
+	const compare = (a, b) => {
 		if (a === null || b === null) {
 			return 0;
 		}
@@ -24,11 +21,11 @@ class App extends Component {
 		return 0;
 	};
 
-	generateRandomPieces = () => {
+	const generateRandomPieces = () => {
 		// Todo: Add algoithm which creates an array which will make the probability of
 		// getting higher order pieces more likely
 
-		let tempBookOne = this.state.currentBookOne;
+		let tempBookOne = currentBookOne;
 
 		// Todo refactor this to be cleaner, extract out to helper file
 		const firstPiece = tempBookOne.length
@@ -46,57 +43,42 @@ class App extends Component {
 
 		tempBookOne = tempBookOne.filter(song => thirdPiece.bookOrder !== song.bookOrder);
 
-		let selectedPieces = [firstPiece, secondPiece, thirdPiece].filter(Boolean);
-		selectedPieces = selectedPieces.sort(this.compare);
+		let selectedPieces2 = [firstPiece, secondPiece, thirdPiece].filter(Boolean);
+		selectedPieces2 = selectedPieces2.sort(compare);
 
-		this.setState({
-			selectedPieces,
-			currentBookOne: tempBookOne,
-			reset: false,
-		});
+		setSelectedPieces(selectedPieces2);
+		setCurrentBookOne(tempBookOne);
+		setReset(false);
 	};
 
-	resetSongPool = () => {
-		this.setState({ selectedPieces: [], currentBookOne: bookOne, reset: true });
+	const resetSongPool = () => {
+		setSelectedPieces([]);
+		setCurrentBookOne(bookOne);
+		setReset(true);
 	};
 
-	render() {
-		return (
-			<div className="container">
-				<h1 className="center blue-text lighten-2">Revision Piece Picker</h1>
-				<SelectedPieces
-					selectedPieces={this.state.selectedPieces}
-					reset={this.state.reset}
-				/>
-				<div className="row center">
-					<button
-						className="waves-effect waves-light btn blue lighten-2 "
-						onClick={this.generateRandomPieces}
-					>
-						Randomize!
-					</button>
-				</div>
-				<div className="row center">
-					<button
-						className="waves-effect waves-light btn grey lighten-2 black-text "
-						onClick={this.resetSongPool}
-					>
-						Reset
-					</button>
-				</div>
-				<Autocomplete
-					options={{
-						data: {
-							Twinkles: null,
-							'Lightly Row': null,
-							TucoSalamanca: 'https://placehold.it/250x250',
-						},
-					}}
-					placeholder="Latest Piece"
-				/>
+	return (
+		<div className="container">
+			<h1 className="center blue-text lighten-2">Revision Piece Picker</h1>
+			<SelectedPieces selectedPieces={selectedPieces} reset={reset} />
+			<div className="row center">
+				<button
+					className="waves-effect waves-light btn blue lighten-2 "
+					onClick={generateRandomPieces}
+				>
+					Randomize!
+				</button>
 			</div>
-		);
-	}
+			<div className="row center">
+				<button
+					className="waves-effect waves-light btn grey lighten-2 black-text "
+					onClick={resetSongPool}
+				>
+					Reset
+				</button>
+			</div>
+		</div>
+	);
 }
 
 export default App;
